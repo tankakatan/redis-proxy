@@ -11,5 +11,6 @@ services:
         depends_on:
             - redis
         container_name: proxy-server
+        env_file: .env
         ports:
-            - "${SERVER_PORT}"
+            - "${SERVER_PORT}:${SERVER_PORT}"
