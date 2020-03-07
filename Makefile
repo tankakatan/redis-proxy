@@ -4,12 +4,16 @@ IMAGE="cached-redis-proxy"
 all: build test run
 
 build: ;@echo "Building a ${APP}:"; \
-docker-compose -p ${IMAGE} up;
+docker-compose build;
+
+build-test: ;@echo "Building a ${APP} test app:"; \
+docker-compose -f docker-compose.yaml -f docker-compose-test.yaml build test;
 
 test: ;@echo "Testing ${APP}"; \
-docker-compose -f docker-compose.yaml -f docker-compose-test.yaml up test
+docker-compose -f docker-compose.yaml -f docker-compose-test.yaml up test;
 
-run: ;@echo "Running ${APP}: ...";
+run: ;@echo "Running ${APP}: ..."; \
+docker-compose up;
 
 update: ;@echo "Updating ${APP}: ...";
 

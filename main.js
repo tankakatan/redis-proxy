@@ -2,20 +2,9 @@
 
 const Koa    = require ('koa')
 const Parser = require ('koa-bodyparser')
-const Redis  = require ('redis')
-const util   = require ('util')
+const redis  = require ('./redis')
 
-const { REDIS_HOST, REDIS_PORT, SERVER_PORT } = process.env
-
-const client = Redis.createClient ({ host: REDIS_HOST, port: REDIS_PORT })
-const redis  = new Proxy ({}, { get: function (_, property) {
-
-    if (!(property in client)) {
-        throw new Error ('Redis client does not have property: ' + property)
-    }
-
-    return typeof client[property] === 'function' ? util.promisify (client[property]).bind (client) : client[property]
-}})
+const { SERVER_PORT } = process.env
 
 async function handleRequest (ctx) {
 
