@@ -4,7 +4,7 @@
   "description": "Cached Redis Proxy Service",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "SERVER_PORT=4444 node main.js",
     "test": "mocha test.js"
   },
   "repository": {
