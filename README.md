@@ -30,7 +30,7 @@ Estimate time: 30m / Actual time: 10m
 - Build
 - Test
 
-## Conform to Redis protocol:
+## Redis protocol:
 Estimate time: ? / Actual time: ? (some research required)
 
 ## Docs:

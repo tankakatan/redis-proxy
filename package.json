@@ -1,0 +1,35 @@
+{
+  "name": "redis-proxy",
+  "version": "1.0.0",
+  "description": "Cached Redis Proxy Service",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tankakatan/redis-proxy.git"
+  },
+  "keywords": [
+    "nodejs",
+    "redis",
+    "lru",
+    "cache",
+    "proxy"
+  ],
+  "author": "Denis Voropaev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tankakatan/redis-proxy/issues"
+  },
+  "homepage": "https://github.com/tankakatan/redis-proxy#readme",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.1.0"
+  }
+}
