@@ -4,8 +4,6 @@ WORKDIR /test
 
 COPY . .
 
-RUN npm install && npm install --save-dev
-
-ENV SERVER_PORT 4444
+RUN npm install && npm install --save-devs
 
 CMD ["npm", "test"]

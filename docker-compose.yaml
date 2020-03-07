@@ -4,11 +4,12 @@ services:
         image: redis:alpine
         container_name: redis-storage
         expose:
-            - 6379
+            - "${REDIS_PORT}"
+
     app:
         build: .
         depends_on:
             - redis
         container_name: proxy-server
         ports:
-            - 4444:4444
+            - "${SERVER_PORT}"
