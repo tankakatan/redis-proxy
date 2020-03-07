@@ -1,32 +1,32 @@
 # Cached Redis Proxy Service
 
 ## App configuration:
-Estimate time: 2h / Actual time:
+Estimate time: 2h / Actual time: 10m
 - Cache expiration time
 - Cache capacity (max amount of stored keys)
 - Redis host/port
 - Service port
 
 ## Node app:
-Estimate time: 3h / Actual time:
+Estimate time: 3h / Actual time: 1h
 - Koa webserver
 - Redis client
 - LRU cache
 
 ## Docker app:
-Estimate time: 1h / Actual time:
+Estimate time: 1h / Actual time: 45m
 - Node app
 - Redis
 
 ## Test:
-Estimate time: 3h / Actual time:
+Estimate time: 3h / Actual time: 1h
 - Populate redis storage with a dummy data
 - Basic sanity checks (connection, data obtaining)
 - Cache properties
 - Storage cleanup
 
 ## Makefile:
-Estimate time: 30m / Actual time: 10m
+Estimate time: 30m / Actual time: 20m
 - Build
 - Test
 
@@ -34,7 +34,7 @@ Estimate time: 30m / Actual time: 10m
 Estimate time: ? / Actual time: ? (some research required)
 
 ## Docs:
-Estimate time: 1h / Actual time: 10m
+Estimate time: 1h / Actual time: 15m
 - Overview
 - How it works
 - Time/space complexity
