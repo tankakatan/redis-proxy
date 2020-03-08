@@ -33,14 +33,14 @@ describe ('LRU Cache', () => {
 
     it ('evicts the least recently used items', () => {
 
-        const least_r_u_index = dummy_data.length - 1 - capacity
+        const least_r_u_index = dummy_data.length - capacity
 
         for (let i = 0; i < dummy_data.length; i++) {
             const [key, value] = dummy_data[i]
             expect (cache.get (key)).to.equal (i < least_r_u_index ? undefined : value)
         }
 
-        const [least_r_u_key, least_r_u_value] = dumm_data[least_r_u_index]
+        const [least_r_u_key, least_r_u_value] = dummy_data[least_r_u_index]
         const [evicted_key] = dummy_data[least_r_u_index + 1]
 
         cache.get (least_r_u_key)

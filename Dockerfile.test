@@ -4,6 +4,6 @@ WORKDIR /test
 
 COPY . .
 
-RUN npm install && npm install --save-devs
+RUN npm install
 
 CMD ["npm", "test"]
