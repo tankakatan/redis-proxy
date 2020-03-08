@@ -97,5 +97,4 @@ describe ('Redis client', () => {
 
         expect (response).to.deep.equal (values)
     })
-
 })

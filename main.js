@@ -4,7 +4,7 @@ const Koa    = require ('koa')
 const Parser = require ('koa-bodyparser')
 const redis  = require ('./redis')
 
-const { SERVER_PORT } = process.env
+const { SERVER_PORT, CACHE_TTL, CACHE_CAPACITY } = process.env
 
 async function handleRequest (ctx) {
 

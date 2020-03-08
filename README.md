@@ -8,27 +8,27 @@ Estimate time: 2h / Actual time: 10m
 - Service port
 
 ## Node app:
-Estimate time: 3h / Actual time: 1h
+Estimate time: 3h / Actual time: 2h30m
 - Koa webserver
-- Redis client
-- LRU cache
+- Redis client ✅
+- LRU cache ✅
 
 ## Docker app:
 Estimate time: 1h / Actual time: 45m
-- Node app
-- Redis
+- Node app ✅
+- Redis ✅
 
 ## Test:
-Estimate time: 3h / Actual time: 1h
-- Populate redis storage with a dummy data
-- Basic sanity checks (connection, data obtaining)
-- Cache properties
-- Storage cleanup
+Estimate time: 3h / Actual time: 2h30m
+- Populate redis storage with a dummy data ✅
+- Basic sanity checks (connection, data obtaining) ✅
+- Cache properties ✅
+- Storage cleanup ✅
 
 ## Makefile:
 Estimate time: 30m / Actual time: 20m
 - Build
-- Test
+- Test ✅
 
 ## Redis protocol:
 Estimate time: ? / Actual time: ? (some research required)
