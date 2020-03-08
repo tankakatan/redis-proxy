@@ -4,6 +4,7 @@
 Estimate time: 2h / Actual time: 10m
 - Cache expiration time
 - Cache capacity (max amount of stored keys)
+- Max simultaneous connections limit
 - Redis host/port
 - Service port
 

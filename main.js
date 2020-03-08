@@ -3,25 +3,48 @@
 const Koa    = require ('koa')
 const Parser = require ('koa-bodyparser')
 const redis  = require ('./redis')
+const Cache  = require ('./cache')
 
 const { SERVER_PORT, CACHE_TTL, CACHE_CAPACITY } = process.env
 
+let cache = undefined
+
 async function handleRequest (ctx) {
 
-    // const { method, query } = ctx.request
-    const { body, path } = ctx.request
+    // const { query, body } = ctx.request
+    const { method, path } = ctx.request
+
+    if (method !== 'GET') {
+        ctx.throw (new Error ('HTTP Request method not supported'))
+    }
+
+    if (cache === undefined) {
+        cache = Cache ({ capacity: CACHE_CAPACITY, ttl: CACHE_TTL })
+        // require ('./populate') ()
+    }
+
+    const [, key]  = path.split ('/')
+
+    let value = undefined
 
     try {
 
-        const [, method, key, value]  = path.split ('/')
-        const args = []
+        if ((value = cache.get (key)) !== undefined) {
 
-        if (key) args.push (key)
-        if (value) args.push (value)
+            // console.log (key, 'value restored from cache:', value)
+            ctx.body = value.toString ()
 
-        console.log ({ method, key, value, body })
+        } else {
 
-        ctx.body = await redis[method] (...args, ...(Array.isArray (body) ? body : []))
+            value = await redis.get (key)
+            // console.log (key, 'value retreived from redis:', value)
+
+            if (value !== null) {
+                cache.set (key, value)
+            } 
+
+            ctx.body = value
+        }
 
     } catch (e) {
 
