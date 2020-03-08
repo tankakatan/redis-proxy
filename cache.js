@@ -18,8 +18,8 @@ function Cache ({ capacity, ttl }) {
 
         if (node === first) return
 
-        node.prev.next = node.next
-        node.next.prev = node.prev
+        if (node.prev !== null) node.prev.next = node.next
+        if (node.next !== null) node.next.prev = node.prev
 
         head.next = node
         node.prev = head
@@ -51,7 +51,7 @@ function Cache ({ capacity, ttl }) {
         }
 
         node.updated = Date.now ()
-        swap (node, head.next)
+        swap (node)
 
         return node.value
     }
@@ -61,23 +61,19 @@ function Cache ({ capacity, ttl }) {
     function set (key, value) {
 
         if (key in nodes) {
+
             nodes[key].value = value
             nodes[key].updated = Date.now ()
-            swap (nodes[key], head.next)
-            return cache
+
+        } else {
+
+            if (size >= capacity) evict ()
+
+            nodes[key] = Node (key, value)
+            size += 1
         }
 
-        if (size >= capacity) evict ()
-
-        const node = Node (key, value)
-        nodes[key] = node
-
-        node.prev = head
-        node.next = head.next
-        head.next = node
-        node.next.prev = node
-
-        size += 1
+        swap (nodes[key])
 
         return cache
     }
