@@ -18,33 +18,33 @@ async function handleRequest (ctx) {
         ctx.throw (new Error ('HTTP Request method not supported'))
     }
 
+    const [, key]  = path.split ('/')
+
+    if (key === undefined) {
+        ctx.throw (new Error ('Data key is not specified'))
+    }
+
     if (cache === undefined) {
         cache = Cache ({ capacity: CACHE_CAPACITY, ttl: CACHE_TTL })
         // require ('./populate') ()
     }
 
-    const [, key]  = path.split ('/')
-
-    let value = undefined
-
     try {
+
+        let value = undefined
 
         if ((value = cache.get (key)) !== undefined) {
 
             // console.log (key, 'value restored from cache:', value)
             ctx.body = value.toString ()
 
-        } else {
+        } else if ((value = await redis.get (key)) !== null) {
 
-            value = await redis.get (key)
             // console.log (key, 'value retreived from redis:', value)
-
-            if (value !== null) {
-                cache.set (key, value)
-            } 
-
-            ctx.body = value
+            cache.set (key, value)
         }
+
+        ctx.body = value
 
     } catch (e) {
 
