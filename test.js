@@ -1,6 +1,7 @@
 "use strict";
 
 const redis = require ('./redis')
+const Cache = require ('./cache')
 const { expect } = require ('chai')
 
 const dummy_data = [
@@ -13,7 +14,57 @@ const dummy_data = [
     ['baz', 'zoo'],
 ]
 
-describe ('Cached Redis Proxy', () => {
+describe ('LRU Cache', () => {
+
+    const ttl = 1000
+    const capacity = 4
+    let cache = undefined
+
+    beforeEach (() => {
+        cache = Cache ({ capacity, ttl })
+        for (let [key, value] of dummy_data) {
+            cache.set (key, value)
+        }
+    })
+
+    afterEach (() => {
+        cache = undefined
+    })
+
+    it ('evicts the least recently used items', () => {
+
+        const least_r_u_index = dummy_data.length - 1 - capacity
+
+        for (let i = 0; i < dummy_data.length; i++) {
+            const [key, value] = dummy_data[i]
+            expect (cache.get (key)).to.equal (i < least_r_u_index ? undefined : value)
+        }
+
+        const [least_r_u_key, least_r_u_value] = dumm_data[least_r_u_index]
+        const [evicted_key] = dummy_data[least_r_u_index + 1]
+
+        cache.get (least_r_u_key)
+        cache.set ('foo', 'bar')
+
+        expect (cache.get (least_r_u_key)).to.equal (least_r_u_value)
+        expect (cache.get (evicted_key)).to.equal (undefined)
+    })
+
+    it ('invalidates keys of the expired ttl', async () => {
+
+        for (const [key, value] of dummy_data.slice (-capacity)) {
+            expect (cache.get (key)).to.equal (value)
+        }
+
+        await new Promise (resolve => setTimeout (resolve, ttl))
+
+        for (let [key] of dummy_data) {
+            expect (cache.get (key)).to.equal (undefined)
+        }
+    })
+})
+
+describe ('Redis client', () => {
 
     before (async () => {
 
