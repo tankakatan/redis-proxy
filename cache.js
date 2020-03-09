@@ -1,6 +1,6 @@
 "use strict";
 
-function Cache ({ capacity, ttl }) {
+module.exports = function ({ capacity, ttl }) {
 
     const Node = (key, value, next = null, prev = null) => ({ key, value, next, prev, updated: Date.now () })
     const nodes = {}
@@ -28,7 +28,6 @@ function Cache ({ capacity, ttl }) {
         first.prev = node
     }
 
-
     function invalidate (node) {
         node.prev.next = node.next
         node.next.prev = node.prev
@@ -46,9 +45,7 @@ function Cache ({ capacity, ttl }) {
         const node = nodes[key]
 
         if (node === undefined) return
-        if (Date.now () - node.updated > ttl) {
-            return invalidate (node)
-        }
+        if (Date.now () - node.updated > ttl) return invalidate (node)
 
         node.updated = Date.now ()
         swap (node)
@@ -80,5 +77,3 @@ function Cache ({ capacity, ttl }) {
 
     return cache
 }
-
-module.exports = Cache

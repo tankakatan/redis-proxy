@@ -1,31 +1,45 @@
 "use strict";
 
-const Koa    = require ('koa')
-const Parser = require ('koa-bodyparser')
-const redis  = require ('./redis')
+const http   = require ('http')
+const Url    = require ('url')
+const Redis  = require ('./redis')
 const Cache  = require ('./cache')
-
-const { SERVER_PORT, CACHE_TTL, CACHE_CAPACITY } = process.env
+const { SERVER_PORT,
+        REDIS_HOST,
+        REDIS_PORT,
+        CACHE_TTL,
+        CACHE_CAPACITY,
+        MAX_CONNECTIONS } = process.env
 
 let cache = undefined
+let redis = undefined
 
-async function handleRequest (ctx) {
+async function handleRequest (request, response) {
 
-    // const { query, body } = ctx.request
-    const { method, path } = ctx.request
+    const { method, url } = request
+    const path = Url.parse (url).path
+    const err = (message, code = 500) => {
+        response.statusCode = code
+        response.write (message)
+        response.end ()
+    }
 
     if (method !== 'GET') {
-        ctx.throw (new Error ('HTTP Request method not supported'))
+        return err ('HTTP Request method not supported')
     }
 
     const [, key]  = path.split ('/')
 
     if (key === undefined) {
-        ctx.throw (new Error ('Data key is not specified'))
+        return err ('Data key is not specified')
     }
 
     if (cache === undefined) {
         cache = Cache ({ capacity: CACHE_CAPACITY, ttl: CACHE_TTL })
+    }
+
+    if (redis === undefined) {
+        redis = Redis ({ host: REDIS_HOST, port: REDIS_PORT })
         // require ('./populate') ()
     }
 
@@ -36,7 +50,7 @@ async function handleRequest (ctx) {
         if ((value = cache.get (key)) !== undefined) {
 
             // console.log (key, 'value restored from cache:', value)
-            ctx.body = value.toString ()
+            value = value.toString ()
 
         } else if ((value = await redis.get (key)) !== null) {
 
@@ -44,14 +58,16 @@ async function handleRequest (ctx) {
             cache.set (key, value)
         }
 
-        ctx.body = value
+        response.statusCode = 200
+        response.write (value)
+        response.end ()
 
     } catch (e) {
 
-        ctx.throw (e)
+        return err (e.message)
     }
 }
 
-new Koa ().use (Parser ()).use (handleRequest).listen (SERVER_PORT)
+http.createServer (handleRequest).listen (SERVER_PORT).maxConnections = MAX_CONNECTIONS
 
 console.log ('\nServer is running on port:', SERVER_PORT, '\n')

@@ -3,42 +3,30 @@
 const Redis = require ('redis')
 const util  = require ('util')
 
-const { REDIS_HOST, REDIS_PORT, MAX_CONCURRENCY } = process.env
-const promisified = {}
-const queue = []
+module.exports = function ({ host, port }) {
 
-let client = undefined
+    const promisified = {}
 
-module.exports = new Proxy ({}, { get: function (_, property) {
+    let client = undefined
 
-    if (client === undefined) {
-        client = Redis.createClient ({ host: REDIS_HOST, port: REDIS_PORT })
-    }
+    return new Proxy ({}, { get: function (_, property) {
 
-    if (!(property in client)) {
-        throw new Error ('Redis client does not have property: ' + property)
-    }
+        if (client === undefined) {
+            client = Redis.createClient ({ host, port })
+        }
 
-    if (typeof client[property] !== 'function') {
-        return client[property]
-    }
+        if (!(property in client)) {
+            throw new Error ('Redis client does not have property: ' + property)
+        }
 
-    if (!(property in promisified)) {
-        promisified[property] = util.promisify (client[property]).bind (client)
-    }
+        if (typeof client[property] !== 'function') {
+            return client[property]
+        }
 
-    return function (...args) {
-        return new Promise ((resolve, reject) => {
-            queue.push (() => promisified[property] (...args).then (resolve).catch (reject))
-            execute ()
-        })
-    }
-}})
+        if (!(property in promisified)) {
+            promisified[property] = util.promisify (client[property]).bind (client)
+        }
 
-let executing = false
-
-const next = () => queue.length ? queue.shift () ().then (next) : undefined
-
-const execute = () => {
-    return executing || (executing = Promise.all (Array.from ({ length: MAX_CONCURRENCY }).map (next)).then (() => { executing = false }))
+        return promisified[property]
+    }})
 }

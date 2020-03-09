@@ -1,6 +1,6 @@
 "use strict";
 
-const redis = require ('./redis')
+const Redis = require ('./redis')
 const Cache = require ('./cache')
 const { expect } = require ('chai')
 
@@ -13,6 +13,8 @@ const dummy_data = [
     ['dummy', 12345],
     ['baz', 'zoo'],
 ]
+
+const { REDIS_HOST, REDIS_PORT } = process.env
 
 describe ('LRU Cache', () => {
 
@@ -66,7 +68,11 @@ describe ('LRU Cache', () => {
 
 describe ('Redis client', () => {
 
+    let redis = undefined
+
     before (async () => {
+
+        redis = Redis ({ host: REDIS_HOST, port: REDIS_PORT })
 
         const args = []
         for (let [key, value] of dummy_data) args.push (key, value)
