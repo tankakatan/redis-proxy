@@ -1,25 +1,23 @@
 APP="Cached-Redis-Proxy-Service"
 IMAGE="cached-redis-proxy"
 
-all: build test run
+all: build run
 
-build: ;@echo "Building a ${APP}:"; \
+build: ;@echo "Building a ${APP}"; \
 docker-compose build;
 
-build-test: ;@echo "Building a ${APP} test app:"; \
+build-test: ;@echo "Building a ${APP} test app"; \
 docker-compose -f docker-compose.yaml -f docker-compose-test.yaml build test;
 
 test: ;@echo "Testing ${APP}"; \
 docker-compose -f docker-compose.yaml -f docker-compose-test.yaml up test;
 
-run: ;@echo "Running ${APP}: ..."; \
+run: ;@echo "Running ${APP}"; \
 docker-compose up;
 
-update: ;@echo "Updating ${APP}: ...";
-
-clean: ;@echo "Cleaning ${APP}: ..."; \
+clean: ;@echo "Cleaning ${APP}"; \
 docker-compose rm; \
 docker container rm ${IMAGE}; \
 docker image rm ${IMAGE};
 
-.PHONY: all build test run update clean
+.PHONY: all build build-test test run clean
