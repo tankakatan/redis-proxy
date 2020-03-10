@@ -89,8 +89,7 @@ Estimate time: 30m / Actual time: 20m
 
 #### Redis protocol:
 
-<style>.__danger { color: red; }</style>
-Estimate time: 5h / Actual time: <b class="__danger">❌⚠️Not implemented (need more time)...⚠️❌</b>
+Estimate time: 5h / Actual time: ❌⚠️**Not implemented (need more time)...**⚠️❌
 
 #### Docs:
 
