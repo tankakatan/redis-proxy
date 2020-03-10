@@ -28,7 +28,7 @@ async function handleRequest (request, response) {
         return err ('HTTP Request method not supported')
     }
 
-    const [, key]  = path.split ('/')
+    let [, key] = path.split ('/')
 
     if (key === undefined) {
         return err ('Data key is not specified')
@@ -45,6 +45,7 @@ async function handleRequest (request, response) {
 
     try {
 
+        key = decodeURI (key)
         let value = undefined
 
         if ((value = cache.get (key)) !== undefined) {
