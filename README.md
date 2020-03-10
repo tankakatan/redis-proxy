@@ -42,7 +42,7 @@ If one need to just rebuild the app images (not running it) the `make build` com
 
 Finally `make clean` command can be run in order to stop and remove all the running containers and images relevant to the application.
 
-All of the above commands use `docker` and `docker-compose` under the hood.
+All of the above commands use `docker` and `docker-compose` under the hood. **If the docker service on your host system is run on behalf of the root user, you should run the above comands with `sudo` as well**.
 
 ### Implementation details
 
