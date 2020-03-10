@@ -42,6 +42,8 @@ module.exports = function ({ host, port, maxRetries = 10, maxRetryTime = 1000 * 
                         throw error
                 }
             })
+
+            client.on ('end', () => { client = undefined })
         }
 
         if (!(property in client)) {

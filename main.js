@@ -40,27 +40,26 @@ async function handleRequest (request, response) {
 
     if (redis === undefined) {
         redis = Redis ({ host: REDIS_HOST, port: REDIS_PORT })
-        // require ('./populate') ()
     }
 
     try {
 
         key = decodeURI (key)
+
         let value = undefined
 
-        if ((value = cache.get (key)) !== undefined) {
+        if ((value = cache.get (key)) === undefined) {
 
-            // console.log (key, 'value restored from cache:', value)
-            value = value.toString ()
+            if ((value = await redis.get (key)) !== null) {
 
-        } else if ((value = await redis.get (key)) !== null) {
-
-            // console.log (key, 'value retreived from redis:', value)
-            cache.set (key, value)
+                cache.set (key, value)
+            }
         }
 
         response.statusCode = 200
-        response.write (value)
+        if (value) {
+            response.write (value.toString ())
+        }
         response.end ()
 
     } catch (e) {

@@ -1,7 +1,7 @@
 version: '3'
 services:
     test:
-        container_name: test-client
+        container_name: cached-redis-proxy_test
         env_file: .env
         depends_on:
             - redis

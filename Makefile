@@ -1,23 +1,21 @@
 APP="Cached-Redis-Proxy-Service"
-IMAGE="cached-redis-proxy"
+NAME="cached-redis-proxy"
 
-all: build run
+all: run
 
 build: ;@echo "Building a ${APP}"; \
-docker-compose build;
-
-build-test: ;@echo "Building a ${APP} test app"; \
-docker-compose -f docker-compose.yaml -f docker-compose-test.yaml build test;
-
-test: ;@echo "Testing ${APP}"; \
-docker-compose -f docker-compose.yaml -f docker-compose-test.yaml up test;
+docker-compose -p ${NAME} build;
 
 run: ;@echo "Running ${APP}"; \
-docker-compose up;
+docker-compose -p ${NAME} up;
+
+build-test: ;@echo "Building a ${APP} test app"; \
+docker-compose -f docker-compose.yaml -f docker-compose-test.yaml -p ${NAME} build test;
+
+test: ;@echo "Testing ${APP}"; \
+docker-compose -f docker-compose.yaml -f docker-compose-test.yaml -p ${NAME} up test;
 
 clean: ;@echo "Cleaning ${APP}"; \
-docker-compose rm; \
-docker container rm ${IMAGE}; \
-docker image rm ${IMAGE};
+docker-compose -p ${NAME} down --remove-orphans;
 
 .PHONY: all build build-test test run clean

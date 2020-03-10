@@ -89,7 +89,7 @@ Estimate time: 30m / Actual time: 20m
 
 #### Redis protocol:
 
-Estimate time: 5h / Actual time: ❌⚠️**Not implemented (need more time)...**⚠️❌
+Estimate time: 5h / Actual time: **❌⚠️Not implemented (need more time)...⚠️❌**
 
 #### Docs:
 
